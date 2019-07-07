@@ -1,22 +1,26 @@
 import React, { Component } from 'react'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Provider } from 'react-redux'
-import logo from './logo.svg'
 import './App.css'
 import store from './store'
-import Recipes from './components/Recipe/recipes'
+import RecipesRecommendator from './components/RecipesRecommendator/recipesRecommendator'
+import MenuToolbar from './components/common/toolbar'
 
 class App extends Component {
 
   render () {
     return (
       <Provider store={ store }>
-        <div className="App">
-          <header className="App-header">
-            <h1 className="App-title">React/Redux Express Starter</h1>
-          </header>
-          <Recipes/>
-        </div>
+        <MuiThemeProvider >
+          <div>
+            <MenuToolbar />
+            <div className="App">
+              <RecipesRecommendator />
+            </div>
+          </div>
+      </MuiThemeProvider>
       </Provider>
+      
     )
   }
 }

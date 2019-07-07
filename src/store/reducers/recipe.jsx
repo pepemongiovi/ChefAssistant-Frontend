@@ -1,8 +1,10 @@
-import { GET_RECIPES, CREATE_RECIPE, UPDATE_RECIPE } from '../actions/constants'
+import { GET_RECIPES, GET_RECIPE, CREATE_RECIPE, UPDATE_RECIPE } from '../actions/constants'
 
 const recipeReducer = (state = [], {type, payload}) => {
     switch (type) {
       case GET_RECIPES:
+        return payload
+      case GET_RECIPE:
         return payload
       case CREATE_RECIPE:
         return payload

@@ -1,4 +1,4 @@
-import { GET_RECIPES, CREATE_RECIPE, UPDATE_RECIPE, GET_RECOMMENDED_RECIPES } from './constants';
+import { GET_RECIPES, GET_RECIPE, CREATE_RECIPE, UPDATE_RECIPE, GET_RECOMMENDED_RECIPES } from './constants';
 
 
 export const getRecipes = () => dispatch => {
@@ -7,10 +7,22 @@ export const getRecipes = () => dispatch => {
     .then(recipes => dispatch({type: GET_RECIPES, payload: recipes}))
 }
 
-export const getRecommendedRecipes = (ids) => dispatch =>{
-  return fetch('/recipes/recommendedRecipes', {method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ ids: ids})})
+export const getRecipe = (recipeId) => dispatch => {
+  return fetch(`/recipes/${recipeId}`)
     .then(res => res.json())
-    .then(recipes => dispatch({type: GET_RECOMMENDED_RECIPES, payload: recipes}))
+    .then(recipe => dispatch({type: GET_RECIPE, payload: recipe}))
+}
+
+export const getRecommendedRecipes = (ids, mainIngredient) => dispatch =>{
+  return fetch('/recipes/recommendedRecipes', {
+      method: "POST", 
+      headers: { "Content-Type": "application/json" }, 
+      body: JSON.stringify({ 
+        ids: ids, 
+        mainIngredient: mainIngredient 
+      })
+    }).then(res => res.json())
+      .then(recipes => dispatch({type: GET_RECOMMENDED_RECIPES, payload: recipes}))
 }
 
 export const createRecipe = (data) => dispatch => {
