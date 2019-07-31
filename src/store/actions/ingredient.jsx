@@ -1,10 +1,10 @@
-import { GET_INGREDIENTS, CREATE_INGREDIENT, GET_SIMILAR_INGREDIENTS, UPDATE_INGREDIENT} from './constants';
+import { GET_INGREDIENT, CREATE_INGREDIENT, GET_SIMILAR_INGREDIENTS, UPDATE_INGREDIENT} from './constants';
 
 
-export const getIngredients = () => dispatch => {
-  return fetch('/ingredients')
+export const getIngredient = (id) => dispatch => {
+  return fetch(`/ingredients/${id}`)
     .then(res => res.json())
-    .then(ingredients => dispatch({type: GET_INGREDIENTS, payload: ingredients}))
+    .then(ingredients => dispatch({type: GET_INGREDIENT, payload: ingredients}))
 }
 
 export const getSimilarIngredients = (ingredient) => dispatch => {

@@ -1,8 +1,8 @@
-import { GET_INGREDIENTS, CREATE_INGREDIENT, UPDATE_INGREDIENT, GET_SIMILAR_INGREDIENTS } from '../actions/constants'
+import { GET_INGREDIENT, CREATE_INGREDIENT, UPDATE_INGREDIENT, GET_SIMILAR_INGREDIENTS } from '../actions/constants'
 
 const ingredientReducer = (state = [], {type, payload}) => {
     switch (type) {
-      case GET_INGREDIENTS:
+      case GET_INGREDIENT:
         return payload
       case GET_SIMILAR_INGREDIENTS:
         return payload

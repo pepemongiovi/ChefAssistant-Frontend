@@ -4,9 +4,9 @@ import RecipeItem from './RecipeItem/recipeItem';
 
 const renderRecipeList = (props) => {
     return props.recipes.map(recipe => 
-        <div style={{marginLeft: '25%'}}>
-            <Grid item xs={12} md={12} key={recipe._id}>
-                <RecipeItem recipe={recipe}/>
+        <div key={recipe._id} style={{marginLeft: '25%'}}>
+            <Grid item xs={12} md={12}>
+                <RecipeItem recipe={recipe} getIngredient={props.getIngredient}/>
             </Grid>
             <br></br>
         </div> 
