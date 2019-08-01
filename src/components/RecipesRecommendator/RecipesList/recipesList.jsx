@@ -16,7 +16,7 @@ const renderRecipeList = (props) => {
 export default function RecipeList(props){
     return  (
             <div style={{textAlign: 'center'}}>
-                <h2>Recommended Recipes</h2>
+                <p style={{fontSize: 30}}>Recommended Recipes</p>
                 <br></br>
                 { renderRecipeList(props) }
             </div>

@@ -1,9 +1,7 @@
 import React, { Component } from 'react';
-import ChipInput from 'material-ui-chip-input'
-import { TextField } from 'material-ui'
 import SearchIcon from '@material-ui/icons/Search'
 import './ingredientsSelector.css';
-import Button from '@material-ui/core/Button'
+import { Button, Checkbox, FormControlLabel }from '@material-ui/core'
 import suggestions from '../../../../src/ingredientsSuggestions'
 import AsyncSelect from 'react-select/async';
 
@@ -19,6 +17,9 @@ const loadSuggestions = inputValue =>
       resolve(filterIngredients(inputValue));
     }, 1000);
 });
+
+const filters = ['cheap','dairyFree', 'glutenFree','ketogenic', 'lowFodmap',
+  'sustainable','vegan', 'vegetarian', 'veryHealthy', 'veryPopular', 'whole30']
 
 class IngredientsSelector extends Component {
   constructor() {
@@ -45,17 +46,50 @@ class IngredientsSelector extends Component {
     this.setState({ mainIngredient: newValue.value });
   }
 
+  getSelectedFilters = () => {
+    let selectedFilters = []
+    
+    filters.forEach(filter => {
+      if(this.state[filter]){
+        selectedFilters.push(filter)
+      }
+    })
+    return selectedFilters
+  } 
+
+  formatCategory = (category) => {
+    category = category[0].toUpperCase() + category.substring(1,category.length)
+    return category.match(/[A-Z][a-z]+|[0-9]+/g).join(" ")
+  }
+
+
+  renderFilters = () => {
+    return filters.map(filter => 
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={this.state[filter]}
+            onChange={() => this.setState({ 
+              [filter]: this.state[filter] ? false : true
+            })}
+            color='primary'
+          />
+        }
+        label={this.formatCategory(filter)}
+      />
+    )
+  }
+
   render() {
     return (
       <div>
-        <h2>Recipe Recommendator</h2>
         <AsyncSelect
           isMulti
           cacheOptions
           defaultOptions
           onChange={this.handleIngredientsChange}
           loadOptions={loadSuggestions}
-          placeholder="List some ingredients"
+          placeholder="List some ingredients (OPCIONAL)"
         />
         <br></br>
         <AsyncSelect
@@ -63,7 +97,7 @@ class IngredientsSelector extends Component {
           defaultOptions
           onChange={this.handleMainIngredientChange}
           loadOptions={loadSuggestions}
-          placeholder="Main ingredient (OPCIONAL)"
+          placeholder="Main ingredient (REQUIRED)"
         />
         <br></br>
         {/* <ChipInput
@@ -85,10 +119,14 @@ class IngredientsSelector extends Component {
           onChange={(event) => 
             this.setState({mainIngredient: event.target.value})
         }/> */}
+
+        {this.renderFilters()}
+
         <Button fullWidth variant="contained" color="primary"
               onClick={() => this.props.getRecipes(
                 this.state.ingredients, 
-                this.state.mainIngredient
+                this.state.mainIngredient,
+                this.getSelectedFilters()
               )}>
             Search for recipes
             <SearchIcon style={{marginLeft: 5}}/>

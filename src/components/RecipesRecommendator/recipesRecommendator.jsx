@@ -32,21 +32,22 @@ class RecipesRecommendator extends Component{
                 ,veryPopular: true
                 ,whole30: false,
                 _id: "5d005fbef57139461753a0ce"
-                            }],
+            }],
             loading: false
         }
     }
 
-    getRecommendedRecipes = async (ingredients, mainIngredient) => {
+    getRecommendedRecipes = async (ingredients, mainIngredient, selectedFilters) => {
         let promises = []
-
+        
         for(let i = 0; i<ingredients.length; i++) {
-            promises.push(this.props.getSimilarIngredients(ingredients[i]))
+            promises.push(this.props.getSimilarIngredients(ingredients[i], selectedFilters))
         }
  
         Promise.all(promises).then(res => {
+            console.log(res)
             let ingredients = res.map(r => r.payload.result)
-            this.props.getRecommendedRecipes(ingredients, mainIngredient)
+            this.props.getRecommendedRecipes(ingredients, mainIngredient, selectedFilters)
                 .then(res => this.fetchRecipes(res.payload.recipes))
         })
     }
@@ -67,6 +68,7 @@ class RecipesRecommendator extends Component{
     render(){
         return (
             <div>
+                <p style={{fontSize: 30}}>Recipe Recommendator</p>
                 <IngredientsSelector getRecipes={this.getRecommendedRecipes}/>
                 <br></br>
                 { this.state.recipes.length > 0 ? (
@@ -80,8 +82,9 @@ class RecipesRecommendator extends Component{
 const dispatchToProps = (dispatch) => ({
     getIngredient: (id) => dispatch(getIngredient(id)),
     getRecipe: (recipeId) => dispatch(getRecipe(recipeId)),
-    getSimilarIngredients: (ingredient) => dispatch(getSimilarIngredients(ingredient)),
-    getRecommendedRecipes: (ingredients, mainIngredient) => dispatch(getRecommendedRecipes(ingredients, mainIngredient))
+    getSimilarIngredients: (ingredient, selectedFilters) => dispatch(getSimilarIngredients(ingredient, selectedFilters)),
+    getRecommendedRecipes: (ingredients, mainIngredient, selectedFilters) => 
+        dispatch(getRecommendedRecipes(ingredients, mainIngredient, selectedFilters))
 })
 
 export default connect(null, dispatchToProps)(RecipesRecommendator);
