@@ -7,11 +7,13 @@ export const getIngredient = (id) => dispatch => {
     .then(ingredients => dispatch({type: GET_INGREDIENT, payload: ingredients}))
 }
 
-export const getSimilarIngredients = (ingredient, selectedFilters) => dispatch => {
-  return fetch(`/ingredients/similarIngredients/${ingredient}`, {
+export const getSimilarIngredients = (mainIngredient, ingredients, selectedFilters) => dispatch => {
+  return fetch(`/ingredients/similarIngredients`, {
       method: "POST", 
       headers: { "Content-Type": "application/json" }, 
-      body: JSON.stringify({ 
+      body: JSON.stringify({
+        mainIngredient: mainIngredient,
+        ingredients: ingredients, 
         selectedFilters: selectedFilters
       })
     }).then(res => res.json())

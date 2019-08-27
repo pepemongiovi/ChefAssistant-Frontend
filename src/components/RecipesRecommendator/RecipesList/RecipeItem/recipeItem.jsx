@@ -5,13 +5,13 @@ import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx'
 import { makeStyles, Button, ButtonGroup, Card, CardHeader, CardMedia, 
-        Collapse, CardContent, CardActions, Typography, IconButton 
+        Collapse, CardContent, CardActions, Typography, IconButton, Box, Divider
 } from '@material-ui/core';
 
 
 const useStyles = makeStyles(theme => ({
   card: {
-    width: '70%'
+    padding: 20
   },
   media: {
     height: 0,
@@ -75,75 +75,80 @@ export default function RecipeItem({ recipe, getIngredient }) {
   }
 
   return (
-    <Card className={classes.card}>
-        <CardHeader
-            title={recipe.title}
-        />
-        <CardMedia
-            className={classes.media}
-            image={recipe.image}
-        />
-        <CardContent style={{display: 'inline-block'}}>
-            <Typography variant="body2" style={{color: 'green'}} component="p">
-                 { getRecipeCategories() }
-            </Typography>
-        </CardContent>
-        
-        <CardActions disableSpacing>
-            <IconButton aria-label="Dislike" style={{color: 'red'}}>
-                <CloseIcon />
-                <p style={{ color: 'red', fontSize:15, marginLeft: 3}}>
-                    Don't show again
-                </p>
-            </IconButton>
+      <Box border={1} style={{width: '70%'}}>
+        <Card className={classes.card}>
+            <CardHeader
+                title={recipe.title}
+            />
+            <CardMedia
+                className={classes.media}
+                image={recipe.image}
+            />
+            <CardContent style={{display: 'inline-block'}}>
+                <Typography variant="body2" style={{color: 'green'}} component="p">
+                    { getRecipeCategories() }
+                </Typography>
+            </CardContent>
+
+            <Divider/>
             
-            <IconButton aria-label="Like" style={{color: 'green'}}>
-                <FavoriteIcon />
-                <p style={{ color: 'green', fontSize:15, marginLeft: 3 }}>
-                    Add to Favorites
-                </p>
-            </IconButton>
+            <CardActions>
+                <IconButton aria-label="Like" style={{color: 'green'}}>
+                    <FavoriteIcon />
+                    <span style={{ color: 'green', fontSize:13 }}>
+                        Add to Favorites
+                    </span>
+                </IconButton>
+                <IconButton aria-label="Dislike" style={{color: 'red'}}>
+                    <CloseIcon />
+                    <span style={{ color: 'red', fontSize: 13}}>
+                        Don't show again
+                    </span>
+                </IconButton>
+                
+                <IconButton
+                    className={clsx(classes.expand, {
+                        [classes.expandOpen]: expanded,
+                    })}
+                    onClick={toggleExpand}
+                    aria-expanded={expanded}
+                    aria-label="Show more">
+                    <ExpandMoreIcon />
+                </IconButton>
+            </CardActions>
+
             
-            <IconButton
-                className={clsx(classes.expand, {
-                    [classes.expandOpen]: expanded,
-                })}
-                onClick={toggleExpand}
-                aria-expanded={expanded}
-                aria-label="Show more">
-                <ExpandMoreIcon />
-            </IconButton>
-        </CardActions>
-        
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-            <ButtonGroup color="primary" size="medium" 
-                style={{float: 'left', marginLeft: 20, marginBottom: 20}}
-                aria-label="large outlined secondary button group"
-            >
-                <Button style={getTabButtonStyle('instructions')}
-                    onClick={() => setTab('instructions')}>
-                    Instructions
-                </Button>
-                <Button style={getTabButtonStyle('ingredients')}
-                    onClick={() => setTab('ingredients')}>
-                    Ingredients
-                </Button>
-            </ButtonGroup>
             
-            { tab == 'instructions' ? 
-                <CardContent>
-                    <Typography paragraph>
-                        <List data={recipe.instructions.split('.').filter(inst => inst != "")}/>
-                    </Typography>
-                </CardContent>
-            :
-                <CardContent>
-                    <Typography paragraph>
-                        <List data={ingredients}/>
-                    </Typography>
-                </CardContent>
-            }
-        </Collapse>
-    </Card>
+            <Collapse in={expanded} timeout="auto" unmountOnExit>
+                <ButtonGroup color="primary" size="medium" 
+                    style={{float: 'left', marginLeft: 20, marginBottom: 20}}
+                    aria-label="large outlined secondary button group"
+                >
+                    <Button style={getTabButtonStyle('instructions')}
+                        onClick={() => setTab('instructions')}>
+                        Instructions
+                    </Button>
+                    <Button style={getTabButtonStyle('ingredients')}
+                        onClick={() => setTab('ingredients')}>
+                        Ingredients
+                    </Button>
+                </ButtonGroup>
+                
+                { tab == 'instructions' ? 
+                    <CardContent>
+                        <Typography paragraph>
+                            <List data={recipe.instructions.split('.').filter(inst => inst != "")}/>
+                        </Typography>
+                    </CardContent>
+                :
+                    <CardContent>
+                        <Typography paragraph>
+                            <List data={ingredients}/>
+                        </Typography>
+                    </CardContent>
+                }
+            </Collapse>
+        </Card>
+    </Box>
   );
 }

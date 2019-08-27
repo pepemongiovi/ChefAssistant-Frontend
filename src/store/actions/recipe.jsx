@@ -13,17 +13,17 @@ export const getRecipe = (recipeId) => dispatch => {
     .then(recipe => dispatch({type: GET_RECIPE, payload: recipe}))
 }
 
-export const getRecommendedRecipes = (ids, mainIngredient, selectedFilters) => dispatch =>{
+export const getRecommendedRecipes = (mainIngredientIds, ingredientsIds) => dispatch =>{
   return fetch('/recipes/recommendedRecipes', {
       method: "POST", 
       headers: { "Content-Type": "application/json" }, 
       body: JSON.stringify({ 
-        ids: ids, 
-        mainIngredient: mainIngredient,
-        selectedFilters: selectedFilters
+        mainIngredientIds: mainIngredientIds,
+        ingredientsIds: ingredientsIds
       })
     }).then(res => res.json())
     .then(recipes => dispatch({type: GET_RECOMMENDED_RECIPES, payload: recipes}))
+    .catch(err => console.log(err))
 }
 
 export const createRecipe = (data) => dispatch => {

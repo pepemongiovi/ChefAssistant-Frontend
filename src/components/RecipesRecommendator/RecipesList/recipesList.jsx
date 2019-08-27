@@ -1,5 +1,5 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import { Grid, Paper } from '@material-ui/core';
 import RecipeItem from './RecipeItem/recipeItem';
 
 const renderRecipeList = (props) => {
@@ -15,10 +15,10 @@ const renderRecipeList = (props) => {
 
 export default function RecipeList(props){
     return  (
-            <div style={{textAlign: 'center'}}>
-                <p style={{fontSize: 30}}>Recommended Recipes</p>
+            <Paper style={{ padding: 20, backgroundColor: 'rgb(255,255,255,0.7)' }}>
+                <p style={{fontSize: 30, marginTop: 2}}>Recommended Recipes</p>
                 <br></br>
                 { renderRecipeList(props) }
-            </div>
+            </Paper>
     )
 }

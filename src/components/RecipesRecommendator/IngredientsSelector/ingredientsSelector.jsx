@@ -18,8 +18,8 @@ const loadSuggestions = inputValue =>
     }, 1000);
 });
 
-const filters = ['cheap','dairyFree', 'glutenFree','ketogenic', 'lowFodmap',
-  'sustainable','vegan', 'vegetarian', 'veryHealthy', 'veryPopular', 'whole30']
+const filters = ['dairyFree', 'glutenFree','ketogenic', 'lowFodmap',
+  'sustainable','vegan', 'vegetarian', 'veryHealthy', 'whole30']
 
 class IngredientsSelector extends Component {
   constructor() {
@@ -89,7 +89,7 @@ class IngredientsSelector extends Component {
           defaultOptions
           onChange={this.handleIngredientsChange}
           loadOptions={loadSuggestions}
-          placeholder="List some ingredients (OPCIONAL)"
+          placeholder="Choose some ingredients (OPCIONAL)"
         />
         <br></br>
         <AsyncSelect
@@ -97,7 +97,7 @@ class IngredientsSelector extends Component {
           defaultOptions
           onChange={this.handleMainIngredientChange}
           loadOptions={loadSuggestions}
-          placeholder="Main ingredient (REQUIRED)"
+          placeholder="Choose a main ingredient (REQUIRED)"
         />
         <br></br>
         {/* <ChipInput
@@ -121,15 +121,17 @@ class IngredientsSelector extends Component {
         }/> */}
 
         {this.renderFilters()}
-
-        <Button fullWidth variant="contained" color="primary"
+        
+        <Button fullWidth variant="contained" 
+              style={{ marginTop:15, backgroundColor: 'blue', color: 'white' }}
               onClick={() => this.props.getRecipes(
                 this.state.ingredients, 
                 this.state.mainIngredient,
                 this.getSelectedFilters()
               )}>
+            <SearchIcon style={{marginRight: 5}}/>
             Search for recipes
-            <SearchIcon style={{marginLeft: 5}}/>
+            
         </Button>
       </div>
     );
