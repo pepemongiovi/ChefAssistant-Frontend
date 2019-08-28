@@ -11,44 +11,22 @@ class RecipesRecommendator extends Component{
     constructor() {
         super()
         this.state = {
-            recipes: [{
-                cheap: false,
-                dairyFree: false,
-                glutenFree: true,
-                image: "https://spoonacular.com/recipeImages/248115-556x370.jpg"
-                ,ingredients: [
-                "5d005fbef57139461753a0cf",
-                "5d005fbef57139461753a0d0",
-                "5d005fbef57139461753a0d1",
-                "5d005fbef57139461753a0d2",
-                "5d005fbef57139461753a0d3"],
-                instructions: "Place a medium skillet over medium-high heat.  Add the SeaPack shrimp in a single layer and saut for 7-8 minutes, turning occasionally, until the shrimp are fully cooked.  Remove the shrimp with a slotted spoon to a cutting board and coarsely chop.Heat a griddle over medium heat.  To half of each of the tortillas, add some of the Monterey Jack cheese, some Parmesan, 1/4 of the shrimp and then a little more Monterey Jack (to act as the glue to keep everything together).  Fold the tortilla over the filling, forming a half circle.Spray the griddle with nonstick cooking spray and place the quesadillas on.  Cook until golden, then flip and cook on the second side until golden and the cheese is melted.  Cut each quesadilla into wedges to serve."
-                ,ketogenic: true
-                ,lowFodmap: true
-                ,sustainable: true
-                ,title: "BBQ Chicken with Blue Cheese Slaw Wraps"
-                ,vegan: true
-                ,vegetarian: true
-                ,veryHealthy: false
-                ,veryPopular: true
-                ,whole30: false,
-                _id: "5d005fbef57139461753a0ce"
-            }],
+            recipes: [],
             loading: false
         }
     }
 
-    getRecommendedRecipes = (ingredients, mainIngredient, selectedFilters) => {
+    getRecommendedRecipes = (ingredients, mainIngredient, selectedFilters, setLoading) => {
         this.props.getSimilarIngredients(mainIngredient, ingredients, selectedFilters).then(res => {
             const { ingredientsIds, mainIngredientIds } = res.payload.result
 
             this.props.getRecommendedRecipes(mainIngredientIds, ingredientsIds).then(res => 
-                this.fetchRecipes(res)
+                this.fetchRecipes(res, setLoading)
             )
         })
     }
 
-    fetchRecipes(recipes) {
+    fetchRecipes(recipes, setLoading) {
         recipes = recipes.payload.recipes
         let promises = []
 
@@ -58,7 +36,7 @@ class RecipesRecommendator extends Component{
  
         Promise.all(promises).then(res => {
             this.setState({ recipes: res.map(r => r.payload[0])})
-            console.log(this.state.recipes[0])
+            setLoading()
         })
     }
 

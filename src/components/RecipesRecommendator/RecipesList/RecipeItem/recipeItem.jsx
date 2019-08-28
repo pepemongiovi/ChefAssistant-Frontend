@@ -50,7 +50,7 @@ export default function RecipeItem({ recipe, getIngredient }) {
     const getRecipeCategories = () => {
         let categories = []
         Object.keys(recipe).forEach(att => {
-            if(recipe[att] === true && att !== 'veryPopular') {
+            if(recipe[att] === true) {
                 categories.push(formatCategory(att))
             }
         })
