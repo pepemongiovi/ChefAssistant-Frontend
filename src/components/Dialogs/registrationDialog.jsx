@@ -1,29 +1,44 @@
 import React from 'react'
-import { Dialog, DialogTitle, CircularProgress, DialogContent, 
-    DialogActions, TextField, Button} from '@material-ui/core';
+import { register } from '../../store/actions/user'
+import { connect } from 'react-redux'
+import { Dialog, DialogTitle, CircularProgress, DialogContent,FormHelperText,
+    DialogActions, TextField, Button,FormControl, InputLabel, OutlinedInput} from '@material-ui/core';
 
-export default class RegistrationDialog extends React.Component {
+class RegistrationDialog extends React.Component {
   constructor(props){
     super(props)
     this.state = {
       loading: false,
-      email: "",
-      password: "",
-      passwordConfirmation: ""
+      username: null,
+      password: null,
+      passwordConfirmation: null,
+      error_message: ""
     }
   }
 
   register = () => {
     this.setState({ loading: true })
-    setTimeout(() => {
+
+    this.props.register(this.state.username, this.state.password).then(user => {
       this.props.handleClose()
-      this.setState({ loading: false })
       this.props.openLoginDialog()
-    }, 1500)
+      this.setState({ loading: false })
+    })
+    .catch(error_message => {
+      this.setState({ error_message, loading: false})
+    })
+  }
+
+  inputsInvalid = () => {
+    const { username, password, passwordConfirmation } = this.state
+    return !username || username.length < 6 
+      || !password || password.length < 6 
+      || password !== passwordConfirmation
   }
 
   render() { 
     const { open, handleClose } = this.props
+    const { username, password, passwordConfirmation } = this.state
 
     return (
       <div>
@@ -32,39 +47,67 @@ export default class RegistrationDialog extends React.Component {
             <b>Registration</b>
           </DialogTitle>
           <DialogContent>
-            <TextField
-              value={this.state.email}
-              onChange={({ target }) => this.setState({ email: target.value })}
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Email Address"
-              type="email"
-              fullWidth
-            />
-            <TextField
-              value={this.statepassword}
-              onChange={({ target }) => this.setState({ password: target.value })}
-              margin="dense"
-              id="password"
-              label="Password"
-              type="password"
-              fullWidth
-            />
-            <TextField
-              value={this.statepasswordConfirmation}
-              onChange={({ target }) => this.setState({ passwordConfirmation: target.value })}
-              margin="dense"
-              id="password_confirmation"
-              label="Password confirmation"
-              type="password"
-              fullWidth
-            />
+            
+            <FormControl style={{ width: '100%'}}>
+              <TextField
+                error={ username !== null && username.length < 6 }
+                errorText= "wtfff"
+                value={this.state.username}
+                onChange={({ target }) => this.setState({ username: target.value })}
+                autoFocus
+                margin="dense"
+                id="name"
+                label="Username"
+                type="username"
+                fullWidth
+              />
+              { username == null || username.length > 5 ? null : 
+                <FormHelperText style={{ color: "red" }}>
+                  Must have at least 6 characters
+                </FormHelperText>
+              }
+            </FormControl>
+
+            <FormControl style={{ width: '100%'}}>
+              <TextField
+                error={ password != null && password.length < 6 }
+                value={this.state.password}
+                onChange={({ target }) => this.setState({ password: target.value })}
+                margin="dense"
+                id="password"
+                label="Password"
+                type="password"
+                fullWidth
+              />
+              { password == null || password.length > 5 ? null : 
+                <FormHelperText style={{ color: "red" }}>
+                  Must have at least 6 characters
+                </FormHelperText>
+              }
+            </FormControl>
+            
+            <FormControl style={{ width: '100%'}}>
+              <TextField
+                error={ passwordConfirmation != null && passwordConfirmation.length < 6 }
+                value={this.state.passwordConfirmation}
+                onChange={({ target }) => this.setState({ passwordConfirmation: target.value })}
+                margin="dense"
+                id="password_confirmation"
+                label="Password confirmation"
+                type="password"
+                fullWidth
+              />
+              { passwordConfirmation == null || password === passwordConfirmation ? null : 
+                <FormHelperText style={{ color: "red" }}>
+                  Must match password above
+                </FormHelperText>
+              }
+            </FormControl>
           </DialogContent>
           
           <DialogActions style={{ margin: 15 }}>
             <Button onClick={this.register} fullWidth color="primary" 
-              variant="contained" disabled={this.state.loading}>
+              variant="contained" disabled={this.state.loading || this.inputsInvalid() }>
               { this.state.loading ? <CircularProgress style={{ marginRight: 5 }} size={20}/> : null }
               Register
             </Button>
@@ -74,3 +117,9 @@ export default class RegistrationDialog extends React.Component {
     );
   }
 }
+
+const dispatchToProps = (dispatch) => ({
+  register: (username, password) => dispatch(register(username, password))
+})
+
+export default connect(null, dispatchToProps)(RegistrationDialog);

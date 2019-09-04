@@ -1,23 +1,36 @@
 import React from 'react'
+import { login } from '../../store/actions/user'
+import { connect } from 'react-redux'
 import { Dialog, DialogTitle, CircularProgress, DialogContent, 
     DialogActions, TextField, Link, Button} from '@material-ui/core';
 
-export default class LoginDialog extends React.Component {
+class LoginDialog extends React.Component {
   constructor(props){
     super(props)
     this.state = {
       loading: false,
-      email: "",
-      password: ""
+      username: "",
+      password: "",
+      error_message: ""
     }
   }
 
   login = () => {
     this.setState({ loading: true })
-    setTimeout(() => {
+
+    this.props.login(this.state.username, this.state.password).then(user => {
       this.props.handleClose()
       this.setState({ loading: false })
-    }, 1500)
+      this.props.setUser(JSON.parse(localStorage.getItem('user')))
+    })
+    .catch(error_message => {
+      this.setState({ error_message, loading: false })
+    })
+  }
+
+  handleClose = () => {
+    this.props.handleClose()
+    this.setState({ username: "", password: "", error_message: ""})
   }
 
   register = () => {
@@ -26,23 +39,21 @@ export default class LoginDialog extends React.Component {
   }
 
   render() {
-    const { open, handleClose } = this.props
-
     return (
       <div>
-        <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+        <Dialog open={this.props.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
           <DialogTitle style={{ marginBottom: -10 }}>
             <b>Login</b>
           </DialogTitle>
           <DialogContent>
             <TextField
-              value={this.state.email}
-              onChange={({ target }) => this.setState({ email: target.value })}
+              value={this.state.username}
+              onChange={({ target }) => this.setState({ username: target.value })}
               autoFocus
               margin="dense"
               id="name"
-              label="Email Address"
-              type="email"
+              label="Username"
+              type="username"
               fullWidth
             />
             <TextField
@@ -60,15 +71,22 @@ export default class LoginDialog extends React.Component {
             </Link>
           </DialogContent>
           
-          <DialogActions style={{ margin: 15 }}>
-            <Button onClick={this.login} fullWidth color="primary" 
-              variant="contained" disabled={this.state.loading}>
+          <DialogActions style={{ margin: 15, marginTop: 5 }}>
+            <Button onClick={this.login} fullWidth color="primary" variant="contained" 
+              disabled={this.state.loading || this.state.username == "" || this.state.password == "" }>
               { this.state.loading ? <CircularProgress style={{ marginRight: 5 }} size={20}/> : null }
               Log in
             </Button>
           </DialogActions>
+          <p style={{ color: 'red', textAlign: 'center', marginTop: -10 }}>{this.state.error_message}</p>
         </Dialog>
       </div>
     );
   }
 }
+
+const dispatchToProps = (dispatch) => ({
+  login: (username, password) => dispatch(login(username, password))
+})
+
+export default connect(null, dispatchToProps)(LoginDialog);

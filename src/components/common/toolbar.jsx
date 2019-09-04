@@ -21,7 +21,7 @@ const useStyles = makeStyles(theme => ({
 
 export default function MenuToolbar() {
   const classes = useStyles();
-  const [auth, setAuth] = React.useState(true);
+  const [user, setUser] = React.useState(JSON.parse(localStorage.getItem('user')));
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const openMenuOptions = Boolean(anchorEl);
@@ -45,7 +45,8 @@ export default function MenuToolbar() {
 
   const logout = () => {
     handleClose()
-    setAuth(null)
+    setUser(null)
+    localStorage.removeItem('user');
   }
 
   return (
@@ -57,13 +58,13 @@ export default function MenuToolbar() {
             ChefAssistant
           </Typography>
 
-          { !auth && (
+          { !user && (
             <Button style={{ color: 'white'}} onClick={() => setLoginDialogOpened(true)}>
               <LockIcon/> Login
             </Button>
           )}
 
-          { auth && (
+          { user && (
             <div>
               <IconButton
                 aria-label="account of current user"
@@ -74,7 +75,7 @@ export default function MenuToolbar() {
               >
                 <AccountCircle />
                 <span style={{ fontSize: 15, marginLeft: 5 }}>
-                  Giuseppe
+                  { user.username }
                 </span>
               </IconButton>
 
@@ -108,7 +109,7 @@ export default function MenuToolbar() {
       </AppBar>
 
       <LoginDialog open={loginDialogOpened} handleClose={() => setLoginDialogOpened(false)}
-        openRegisterDialog={() => setRegistrationDialogOpened(true)} />
+        openRegisterDialog={() => setRegistrationDialogOpened(true)} setUser={(user) => setUser(user)}/>
 
       <RegistrationDialog open={registrationDialogOpened} handleClose={() => setRegistrationDialogOpened(false)}
         openLoginDialog={() => setLoginDialogOpened(true)} />
