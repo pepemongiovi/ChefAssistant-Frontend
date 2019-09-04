@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import List from '../../../common/list'
+import List from '../../common/list'
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function RecipeItem({ recipe, getIngredient }) {
+export default function RecipeItem({ recipe, getIngredient, favorite }) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [tab, setTab] = useState('instructions')
@@ -93,17 +93,26 @@ export default function RecipeItem({ recipe, getIngredient }) {
             <Divider/>
             
             <CardActions>
-                <IconButton aria-label="Like" style={{color: 'green'}}>
-                    <FavoriteIcon />
-                    <span style={{ color: 'green', fontSize:13 }}>
-                        Add to Favorites
-                    </span>
-                </IconButton>
+                { favorite ? null : 
+                    <IconButton aria-label="Like" style={{color: 'green'}}>
+                        <FavoriteIcon />
+                        <span style={{ color: 'green', fontSize:13 }}>
+                            Add to Favorites
+                        </span>
+                    </IconButton>
+                }
+                
                 <IconButton aria-label="Dislike" style={{color: 'red'}}>
                     <CloseIcon />
-                    <span style={{ color: 'red', fontSize: 13}}>
-                        Don't show again
-                    </span>
+                    { favorite ? 
+                        <span style={{ color: 'red', fontSize: 13}}>
+                            Remove from favorites
+                        </span>
+                    :
+                        <span style={{ color: 'red', fontSize: 13}}>
+                            Don't show again
+                        </span>
+                    }
                 </IconButton>
                 
                 <IconButton

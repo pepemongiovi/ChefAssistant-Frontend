@@ -2,10 +2,13 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import MenuIcon from '@material-ui/icons/RestaurantMenu';
 import LockIcon from '@material-ui/icons/HowToReg';
-import RecipesIcon from '@material-ui/icons/ListAlt';
+import FavoriteIcon from '@material-ui/icons/FavoriteBorder';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { AppBar, Menu, MenuItem, IconButton, Typography, Toolbar, Button} from '@material-ui/core';
+import LoginDialog from '../Dialogs/loginDialog'
+import RegistrationDialog from '../Dialogs/registrationDialog'
+import FavoriteRecipesDialog from '../Dialogs/favoriteRecipesDialog'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -19,8 +22,18 @@ const useStyles = makeStyles(theme => ({
 export default function MenuToolbar() {
   const classes = useStyles();
   const [auth, setAuth] = React.useState(true);
+
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const open = Boolean(anchorEl);
+  const openMenuOptions = Boolean(anchorEl);
+
+  const [loginDialogOpened, setLoginDialogOpened] = React.useState(false);
+  const [registrationDialogOpened, setRegistrationDialogOpened] = React.useState(false);
+  const [favoriteRecipesDialogOpened, setFavoriteRecipesDialogOpened] = React.useState(false);
+
+  const viewFavoriteRecipes = () => {
+    setFavoriteRecipesDialogOpened(true)
+    setAnchorEl(null);
+  }
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -32,11 +45,7 @@ export default function MenuToolbar() {
 
   const logout = () => {
     handleClose()
-    setAuth(!auth)
-  }
-
-  const login = () => {
-    setAuth(!auth)
+    setAuth(null)
   }
 
   return (
@@ -49,14 +58,13 @@ export default function MenuToolbar() {
           </Typography>
 
           { !auth && (
-            <Button style={{ color: 'white'}} onClick={login}>
+            <Button style={{ color: 'white'}} onClick={() => setLoginDialogOpened(true)}>
               <LockIcon/> Login
             </Button>
           )}
 
           { auth && (
             <div>
-              
               <IconButton
                 aria-label="account of current user"
                 aria-controls="menu-appbar"
@@ -69,8 +77,7 @@ export default function MenuToolbar() {
                   Giuseppe
                 </span>
               </IconButton>
-              
-              
+
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
@@ -83,12 +90,12 @@ export default function MenuToolbar() {
                   vertical: 'top',
                   horizontal: 'right',
                 }}
-                open={open}
+                open={openMenuOptions}
                 onClose={handleClose}
               >
-                <MenuItem style={{width: 200}} onClick={handleClose}>
-                  <RecipesIcon style={{marginRight: 5}} />
-                  My recipes
+                <MenuItem style={{width: 200}} onClick={viewFavoriteRecipes}>
+                  <FavoriteIcon style={{marginRight: 5}} />
+                  Favorite recipes
                 </MenuItem>
                 <MenuItem style={{width: 200}} onClick={logout}>
                   <LogoutIcon style={{marginRight: 5}} />
@@ -99,6 +106,14 @@ export default function MenuToolbar() {
           )}
         </Toolbar>
       </AppBar>
+
+      <LoginDialog open={loginDialogOpened} handleClose={() => setLoginDialogOpened(false)}
+        openRegisterDialog={() => setRegistrationDialogOpened(true)} />
+
+      <RegistrationDialog open={registrationDialogOpened} handleClose={() => setRegistrationDialogOpened(false)}
+        openLoginDialog={() => setLoginDialogOpened(true)} />
+      
+      <FavoriteRecipesDialog open={favoriteRecipesDialogOpened} handleClose={() => setFavoriteRecipesDialogOpened(false)} />
     </div>
   );
 }
