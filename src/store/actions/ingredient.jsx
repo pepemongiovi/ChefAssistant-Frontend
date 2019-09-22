@@ -2,15 +2,23 @@ import { GET_INGREDIENT, CREATE_INGREDIENT, GET_SIMILAR_INGREDIENTS, UPDATE_INGR
 
 
 export const getIngredient = (id) => dispatch => {
-  return fetch(`/ingredients/${id}`)
-    .then(res => res.json())
+  return fetch(`/ingredients/${id}`, {
+    method: "GET", 
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${localStorage.getItem("authToken")}` 
+    }
+  }).then(res => res.json())
     .then(ingredients => dispatch({type: GET_INGREDIENT, payload: ingredients}))
 }
 
 export const getSimilarIngredients = (mainIngredient, ingredients, selectedFilters) => dispatch => {
   return fetch(`/ingredients/similarIngredients`, {
       method: "POST", 
-      headers: { "Content-Type": "application/json" }, 
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("authToken")}` 
+      }, 
       body: JSON.stringify({
         mainIngredient: mainIngredient,
         ingredients: ingredients, 
@@ -21,7 +29,7 @@ export const getSimilarIngredients = (mainIngredient, ingredients, selectedFilte
 }
 
 export const createIngredient = (data) => dispatch => {
-  return fetch('/ingredients', { method: 'POST', data: data })
+  return fetch('/ingredients', { method: 'GET', data: data })
     .then(res => res.json())
     .then(ingredient => dispatch({type: CREATE_INGREDIENT, payload: ingredient}))
 }

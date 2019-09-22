@@ -29,11 +29,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function RecipeItem({ recipe, getIngredient, favorite }) {
+export default function RecipeItem({ recipe, getIngredient, updateUser }) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [tab, setTab] = useState('instructions')
     const [ingredients, setIngredients] = useState([])
+
+    const loggedUser = JSON.parse(localStorage.getItem('user'))
 
     const getTabButtonStyle = (type) => {
         if(tab == type) {
@@ -74,6 +76,22 @@ export default function RecipeItem({ recipe, getIngredient, favorite }) {
     }
   }
 
+  const favoritedByUser = () => {
+      return JSON.parse(localStorage.getItem('user')).favoriteRecipes
+                .filter(r => r === recipe._id).length > 0;
+  }
+
+  const addRecipeToFavorites = () => {
+    loggedUser.favoriteRecipes.push(recipe._id)
+    updateUser(loggedUser)
+  }
+
+  const removeRecipeFromFavorites = () => {
+    loggedUser.favoriteRecipes = loggedUser.favoriteRecipes
+                                    .filter(r => r._id === recipe._id)
+    updateUser(loggedUser)
+  }
+
   return (
       <Box border={1} style={{width: '70%'}}>
         <Card className={classes.card}>
@@ -93,8 +111,9 @@ export default function RecipeItem({ recipe, getIngredient, favorite }) {
             <Divider/>
             
             <CardActions>
-                { favorite ? null : 
-                    <IconButton aria-label="Like" style={{color: 'green'}}>
+                { favoritedByUser() ? null : 
+                    <IconButton onClick={() => addRecipeToFavorites()} 
+                        aria-label="Like" style={{color: 'green'}}>
                         <FavoriteIcon />
                         <span style={{ color: 'green', fontSize:13 }}>
                             Add to Favorites
@@ -102,13 +121,14 @@ export default function RecipeItem({ recipe, getIngredient, favorite }) {
                     </IconButton>
                 }
                 
-                <IconButton aria-label="Dislike" style={{color: 'red'}}>
+                <IconButton onClick={() => removeRecipeFromFavorites()} 
+                    aria-label="Dislike" style={{color: 'red'}}>
                     <CloseIcon />
-                    { favorite ? 
+                    { favoritedByUser() ? 
                         <span style={{ color: 'red', fontSize: 13}}>
                             Remove from favorites
                         </span>
-                    :
+                    : 
                         <span style={{ color: 'red', fontSize: 13}}>
                             Don't show again
                         </span>

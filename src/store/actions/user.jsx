@@ -1,4 +1,4 @@
-import { LOGIN, REGISTER } from './constants';
+import { LOGIN, REGISTER, UPDATE_USER } from './constants';
 
 export const login = (username, password) => dispatch => {
     const requestOptions = {
@@ -13,6 +13,8 @@ export const login = (username, password) => dispatch => {
             if (user) {
                 user.authdata = window.btoa(username + ':' + password);
                 localStorage.setItem('user', JSON.stringify(user));
+                localStorage.setItem('authToken', user.token);
+                console.log(user)
             }
             dispatch({type: LOGIN, payload: user})
         });
@@ -28,6 +30,21 @@ export const register = (username, password) => dispatch => {
     return fetch(`/users/register`, requestOptions)
         .then(handleResponse)
         .then(user => dispatch({type: REGISTER, payload: user}));
+}
+
+export const updateUser = (updatedUser) => dispatch => {
+    const requestOptions = {
+        method: 'PUT',
+        headers: { 
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("authToken")}` 
+        },
+        body: JSON.stringify(updatedUser)
+    };
+
+    return fetch(`/users/${updatedUser._id}`, requestOptions)
+        .then(handleResponse)
+        .then(user => dispatch({type: UPDATE_USER, payload: user}));
 }
 
 const handleResponse = (response) => {
