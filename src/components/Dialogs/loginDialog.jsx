@@ -1,8 +1,10 @@
 import React from 'react'
 import { login } from '../../store/actions/user'
 import { connect } from 'react-redux'
+import { toastr } from 'react-redux-toastr'
 import { Dialog, DialogTitle, CircularProgress, DialogContent, 
     DialogActions, TextField, Link, Button} from '@material-ui/core';
+
 
 class LoginDialog extends React.Component {
   constructor(props){
@@ -17,11 +19,12 @@ class LoginDialog extends React.Component {
 
   login = () => {
     this.setState({ loading: true })
-
+ 
     this.props.login(this.state.username, this.state.password).then(user => {
       this.props.handleClose()
       this.setState({ loading: false })
       this.props.setUser(JSON.parse(localStorage.getItem('user')))
+      toastr.success("Successfully logged in!")
     })
     .catch(error_message => {
       this.setState({ error_message, loading: false })
@@ -29,6 +32,7 @@ class LoginDialog extends React.Component {
   }
 
   handleClose = () => {
+    console.log(this.props)
     this.props.handleClose()
     this.setState({ username: "", password: "", error_message: ""})
   }

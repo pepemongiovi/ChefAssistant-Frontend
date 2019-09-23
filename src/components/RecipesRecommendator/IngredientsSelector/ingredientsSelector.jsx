@@ -67,6 +67,7 @@ class IngredientsSelector extends Component {
   renderFilters = () => {
     return filters.map(filter => 
       <FormControlLabel
+        key={filter}
         control={
           <Checkbox
             checked={this.state[filter]}

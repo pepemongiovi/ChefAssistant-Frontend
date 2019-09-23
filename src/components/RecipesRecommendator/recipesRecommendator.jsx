@@ -6,6 +6,7 @@ import { updateUser } from '../../store/actions/user'
 import IngredientsSelector from './IngredientsSelector/ingredientsSelector'
 import RecipeList from '../RecipesList/recipesList'
 import { Paper } from '@material-ui/core'
+import { toastr } from 'react-redux-toastr'
 
 class RecipesRecommendator extends Component{
     
@@ -45,6 +46,11 @@ class RecipesRecommendator extends Component{
     updateUser = (user) => {
         this.props.updateUser(user).then(res => {
             localStorage.setItem('user', JSON.stringify(user))
+            toastr.success("Successfully updated!")
+            this.forceUpdate()
+        }).catch( error => {
+            console.log(error)
+            toastr.error(error)
         })
     }
 

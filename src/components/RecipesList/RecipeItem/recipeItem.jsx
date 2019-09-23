@@ -33,12 +33,10 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [tab, setTab] = useState('instructions')
-    const [ingredients, setIngredients] = useState([])
-
-    const loggedUser = JSON.parse(localStorage.getItem('user'))
+    const [ingredients] = useState([])
 
     const getTabButtonStyle = (type) => {
-        if(tab == type) {
+        if(tab === type) {
             return { backgroundColor: '#e6ecff' }
         }
         else return {}
@@ -57,7 +55,7 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
             }
         })
         return categories.map((cat, i) => {
-            if(i != categories.length-1) {
+            if(i !== categories.length-1) {
                 return cat + ', '
             }
             else return cat
@@ -67,7 +65,7 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
   const toggleExpand = () => {
     setExpanded(!expanded)
 
-    if(ingredients.length == 0) {
+    if(ingredients.length === 0) {
         recipe.ingredients.forEach(id => {
             getIngredient(id).then(res => {
                 ingredients.push(res.payload[0].label)
@@ -82,13 +80,15 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
   }
 
   const addRecipeToFavorites = () => {
+    let loggedUser = JSON.parse(localStorage.getItem('user'))
     loggedUser.favoriteRecipes.push(recipe._id)
     updateUser(loggedUser)
   }
 
   const removeRecipeFromFavorites = () => {
+    let loggedUser = JSON.parse(localStorage.getItem('user'))
     loggedUser.favoriteRecipes = loggedUser.favoriteRecipes
-                                    .filter(r => r._id === recipe._id)
+                                        .filter(r => r !== recipe._id)
     updateUser(loggedUser)
   }
 
@@ -163,17 +163,13 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
                     </Button>
                 </ButtonGroup>
                 
-                { tab == 'instructions' ? 
+                { tab === 'instructions' ? 
                     <CardContent>
-                        <Typography paragraph>
-                            <List data={recipe.instructions.split('.').filter(inst => inst != "")}/>
-                        </Typography>
+                        <List data={recipe.instructions.split('.').filter(inst => inst !== "")}/>
                     </CardContent>
                 :
                     <CardContent>
-                        <Typography paragraph>
-                            <List data={ingredients}/>
-                        </Typography>
+                        <List data={ingredients}/>
                     </CardContent>
                 }
             </Collapse>

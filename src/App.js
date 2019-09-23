@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 import { Provider } from 'react-redux'
-import './App.css'
 import store from './store'
 import RecipesRecommendator from './components/RecipesRecommendator/recipesRecommendator'
 import MenuToolbar from './components/common/toolbar'
+import ReduxToastr from 'react-redux-toastr'
+import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
+import './App.css'
 
 class App extends Component {
 
@@ -17,6 +19,14 @@ class App extends Component {
             <div className="App">
               <RecipesRecommendator />
             </div>
+            <ReduxToastr
+              timeOut={4000}
+              newestOnTop={false}
+              preventDuplicates
+              position='bottom-left'
+              transitionIn="fadeIn"
+              transitionOut="fadeOut"
+              closeOnToastrClick/>
           </div>
       </MuiThemeProvider>
       </Provider>

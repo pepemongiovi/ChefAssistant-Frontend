@@ -9,6 +9,7 @@ import { AppBar, Menu, MenuItem, IconButton, Typography, Toolbar, Button} from '
 import LoginDialog from '../Dialogs/loginDialog'
 import RegistrationDialog from '../Dialogs/registrationDialog'
 import FavoriteRecipesDialog from '../Dialogs/favoriteRecipesDialog'
+import { toastr } from 'react-redux-toastr'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -47,6 +48,7 @@ export default function MenuToolbar() {
     handleClose()
     setUser(null)
     localStorage.removeItem('user');
+    toastr.success("Successfully logged out!")
   }
 
   return (

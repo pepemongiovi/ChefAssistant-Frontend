@@ -1,8 +1,9 @@
 import React from 'react'
 import { register } from '../../store/actions/user'
 import { connect } from 'react-redux'
+import { toastr } from 'react-redux-toastr'
 import { Dialog, DialogTitle, CircularProgress, DialogContent,FormHelperText,
-    DialogActions, TextField, Button,FormControl, InputLabel, OutlinedInput} from '@material-ui/core';
+    DialogActions, TextField, Button,FormControl } from '@material-ui/core';
 
 class RegistrationDialog extends React.Component {
   constructor(props){
@@ -23,6 +24,7 @@ class RegistrationDialog extends React.Component {
       this.props.handleClose()
       this.props.openLoginDialog()
       this.setState({ loading: false })
+      toastr.success("Successfully registered!")
     })
     .catch(error_message => {
       this.setState({ error_message, loading: false})

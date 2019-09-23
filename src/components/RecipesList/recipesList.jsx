@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid, Paper } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import RecipeItem from './RecipeItem/recipeItem';
 
 export default function RecipeList({ recipes, getIngredient, updateUser }){

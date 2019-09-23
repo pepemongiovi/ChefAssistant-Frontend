@@ -13,7 +13,7 @@ export default function SimpleList({data}) {
 
   const renderRows = () => {
     return data.map((text, i) => 
-        <div>
+        <div key={text}>
           <ListItem button>
             <ListItemText>
               <b style={{ color:'blue' }}>{i+1} - </b> {text} 
