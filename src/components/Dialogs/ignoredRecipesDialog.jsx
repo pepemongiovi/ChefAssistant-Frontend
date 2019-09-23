@@ -7,7 +7,7 @@ import { connect } from 'react-redux'
 import { toastr } from 'react-redux-toastr'
 import RecipesList from '../RecipesList/recipesList'
 
-class FavoriteRecipesDialog extends React.Component {
+class IgnoredRecipesDialog extends React.Component {
   constructor(props){
     super(props)
     this.state = {
@@ -25,7 +25,7 @@ class FavoriteRecipesDialog extends React.Component {
   fetchRecipes = () => {
     let promises = []
 
-    JSON.parse(localStorage.getItem('user')).favoriteRecipes.forEach( recipeId => 
+    JSON.parse(localStorage.getItem('user')).ignoredRecipes.forEach( recipeId => 
       promises.push(this.props.getRecipe(recipeId))
     )
     Promise.all(promises).then(res => {
@@ -38,7 +38,7 @@ class FavoriteRecipesDialog extends React.Component {
               localStorage.setItem('user', JSON.stringify(user))
               toastr.success("Successfully updated!")
               this.fetchRecipes()
-           })
+          })
   }
 
   renderContent = () => {
@@ -47,7 +47,7 @@ class FavoriteRecipesDialog extends React.Component {
     }
     else if(this.state.recipes.length === 0) {
       return <p style={{ color: 'red', textAlign: 'center'}}>
-                No favorite recipes added.
+                No ignored recipes added.
              </p> 
     }
     else {
@@ -71,7 +71,7 @@ class FavoriteRecipesDialog extends React.Component {
         >
           <Paper style={{ padding: 20, backgroundColor: 'rgb(255,255,255,0.6)' }}>
             <DialogTitle style={{ marginTop: -10, textAlign: 'center' }}>
-              <b style={{ fontSize: 40 }}>My favorite recipes</b>
+              <b style={{ fontSize: 40 }}>My ignored recipes</b>
             </DialogTitle>
             <DialogContent>
               { this.renderContent() }
@@ -90,5 +90,5 @@ const dispatchToProps = (dispatch) => ({
   updateUser: (user) => dispatch(updateUser(user))
 })
 
-export default connect(null, dispatchToProps)(FavoriteRecipesDialog)
+export default connect(null, dispatchToProps)(IgnoredRecipesDialog)
 

@@ -4,7 +4,8 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import CloseIcon from '@material-ui/icons/Close';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import clsx from 'clsx'
-import { makeStyles, Button, ButtonGroup, Card, CardHeader, CardMedia, 
+import { toastr } from 'react-redux-toastr'
+import { makeStyles, Button, ButtonGroup, Card, CardHeader, CardMedia, CircularProgress,
         Collapse, CardContent, CardActions, Typography, IconButton, Box, Divider
 } from '@material-ui/core';
 
@@ -34,6 +35,8 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
     const [expanded, setExpanded] = useState(false);
     const [tab, setTab] = useState('instructions')
     const [ingredients] = useState([])
+    const [greenButtonLoading, setGreenButtonLoading] = useState(false)
+    const [redButtonLoading, setRedButtonLoading] = useState(false)
 
     const getTabButtonStyle = (type) => {
         if(tab === type) {
@@ -62,118 +65,182 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
         })
     }
 
-  const toggleExpand = () => {
-    setExpanded(!expanded)
+    const toggleExpand = () => {
+        setExpanded(!expanded)
 
-    if(ingredients.length === 0) {
-        recipe.ingredients.forEach(id => {
-            getIngredient(id).then(res => {
-                ingredients.push(res.payload[0].label)
+        if(ingredients.length === 0) {
+            recipe.ingredients.forEach(id => {
+                getIngredient(id).then(res => {
+                    ingredients.push(res.payload[0].label)
+                })
             })
-        })
+        }
     }
-  }
 
-  const favoritedByUser = () => {
-      return JSON.parse(localStorage.getItem('user')).favoriteRecipes
+    const toggleButtonLoading = (buttonColor, value) => {
+        if(buttonColor==='red') setRedButtonLoading(value)
+        else setGreenButtonLoading(value)
+    }
+
+    const handleUserUpdate = (loggedUser, buttonColor = 'red') => {
+        toggleButtonLoading(buttonColor, true)
+        updateUser(loggedUser)
+            .then(() => toggleButtonLoading(buttonColor))
+            .catch(error => {
+                toggleButtonLoading(buttonColor, false)
+                toastr.error(error)
+            })
+    }
+
+    const favoritedByUser = () => {
+        return JSON.parse(localStorage.getItem('user')).favoriteRecipes
                 .filter(r => r === recipe._id).length > 0;
-  }
+    }
 
-  const addRecipeToFavorites = () => {
-    let loggedUser = JSON.parse(localStorage.getItem('user'))
-    loggedUser.favoriteRecipes.push(recipe._id)
-    updateUser(loggedUser)
-  }
+    const ignoreddByUser = () => {
+        return JSON.parse(localStorage.getItem('user')).ignoredRecipes
+                .filter(r => r === recipe._id).length > 0;
+    }
 
-  const removeRecipeFromFavorites = () => {
-    let loggedUser = JSON.parse(localStorage.getItem('user'))
-    loggedUser.favoriteRecipes = loggedUser.favoriteRecipes
-                                        .filter(r => r !== recipe._id)
-    updateUser(loggedUser)
-  }
+    const addRecipeToFavorites = () => {
+        let updatedUser = JSON.parse(localStorage.getItem('user'))
+        updatedUser.favoriteRecipes.push(recipe._id)
+        handleUserUpdate(updatedUser, 'green')
+    }
 
-  return (
-      <Box border={1} style={{width: '70%'}}>
-        <Card className={classes.card}>
-            <CardHeader
-                title={recipe.title}
-            />
-            <CardMedia
-                className={classes.media}
-                image={recipe.image}
-            />
-            <CardContent style={{display: 'inline-block'}}>
-                <Typography variant="body2" style={{color: 'green'}} component="p">
-                    { getRecipeCategories() }
-                </Typography>
-            </CardContent>
+    const addToIgnoredRecipes = () => {
+        let updatedUser = JSON.parse(localStorage.getItem('user'))
+        updatedUser.ignoredRecipes.push(recipe._id)
+        handleUserUpdate(updatedUser)
+    }
 
-            <Divider/>
-            
-            <CardActions>
-                { favoritedByUser() ? null : 
-                    <IconButton onClick={() => addRecipeToFavorites()} 
-                        aria-label="Like" style={{color: 'green'}}>
-                        <FavoriteIcon />
-                        <span style={{ color: 'green', fontSize:13 }}>
-                            Add to Favorites
+    const removeFromFavoriteRecipes = () => {
+        let updatedUser = JSON.parse(localStorage.getItem('user'))
+        updatedUser.favoriteRecipes = updatedUser.favoriteRecipes
+                                            .filter(r => r !== recipe._id)
+        handleUserUpdate(updatedUser)
+    }
+
+    const removeFromIgnoredRecipes = () => {
+        let updatedUser = JSON.parse(localStorage.getItem('user'))
+        updatedUser.ignoredRecipes = updatedUser.ignoredRecipes
+                                            .filter(r => r !== recipe._id)
+        handleUserUpdate(updatedUser)
+    }
+
+    const renderRedButtom = () => {
+        if(ignoreddByUser()) {
+            return <IconButton onClick={removeFromIgnoredRecipes} disabled={redButtonLoading}
+                               aria-label="Dislike" style={{color: 'red'}}>
+                        { redButtonLoading ? 
+                            <CircularProgress size={15}/>
+                            :   <CloseIcon /> 
+                        }   
+                        <span style={{ color: 'red', fontSize: 13}}>
+                            Remove from ignoreds
                         </span>
                     </IconButton>
-                }
-                
-                <IconButton onClick={() => removeRecipeFromFavorites()} 
-                    aria-label="Dislike" style={{color: 'red'}}>
-                    <CloseIcon />
-                    { favoritedByUser() ? 
+        }
+        else if(favoritedByUser()) {
+            return <IconButton onClick={removeFromFavoriteRecipes} disabled={redButtonLoading}
+                               aria-label="Dislike" style={{color: 'red'}}>
+                        { redButtonLoading ? 
+                            <CircularProgress size={15}/>
+                            :   <CloseIcon /> 
+                        }   
                         <span style={{ color: 'red', fontSize: 13}}>
                             Remove from favorites
                         </span>
-                    : 
+                    </IconButton>
+        }
+        else{
+            return <IconButton onClick={addToIgnoredRecipes} disabled={redButtonLoading}
+                               aria-label="Dislike" style={{color: 'red'}}>
+                        { redButtonLoading ? 
+                            <CircularProgress size={15}/>
+                            :   <CloseIcon /> 
+                        }       
                         <span style={{ color: 'red', fontSize: 13}}>
                             Don't show again
                         </span>
-                    }
-                </IconButton>
-                
-                <IconButton
-                    className={clsx(classes.expand, {
-                        [classes.expandOpen]: expanded,
-                    })}
-                    onClick={toggleExpand}
-                    aria-expanded={expanded}
-                    aria-label="Show more">
-                    <ExpandMoreIcon />
-                </IconButton>
-            </CardActions>
+                    </IconButton>
+        }
+        
+    }
 
-            
-            
-            <Collapse in={expanded} timeout="auto" unmountOnExit>
-                <ButtonGroup color="primary" size="medium" 
-                    style={{float: 'left', marginLeft: 20, marginBottom: 20}}
-                    aria-label="large outlined secondary button group"
-                >
-                    <Button style={getTabButtonStyle('instructions')}
-                        onClick={() => setTab('instructions')}>
-                        Instructions
-                    </Button>
-                    <Button style={getTabButtonStyle('ingredients')}
-                        onClick={() => setTab('ingredients')}>
-                        Ingredients
-                    </Button>
-                </ButtonGroup>
+    return (
+        <Box border={1} style={{width: '70%'}}>
+            <Card className={classes.card}>
+                <CardHeader
+                    title={recipe.title}
+                />
+                <CardMedia
+                    className={classes.media}
+                    image={recipe.image}
+                />
+                <CardContent style={{display: 'inline-block'}}>
+                    <Typography variant="body2" style={{color: 'green'}} component="p">
+                        { getRecipeCategories() }
+                    </Typography>
+                </CardContent>
+
+                <Divider/>
                 
-                { tab === 'instructions' ? 
-                    <CardContent>
-                        <List data={recipe.instructions.split('.').filter(inst => inst !== "")}/>
-                    </CardContent>
-                :
-                    <CardContent>
-                        <List data={ingredients}/>
-                    </CardContent>
-                }
-            </Collapse>
-        </Card>
-    </Box>
+                <CardActions>
+                    { favoritedByUser() || ignoreddByUser() ? null : 
+                        <IconButton onClick={() => addRecipeToFavorites()} 
+                            aria-label="Like" style={{color: 'green'}} disabled={greenButtonLoading}>
+                            { greenButtonLoading ? <CircularProgress size={15}/>
+                            : <FavoriteIcon /> 
+                            }
+                            <span style={{ color: 'green', fontSize:13 }}>
+                                Add to Favorites
+                            </span>
+                        </IconButton>
+                    }
+                    
+                    { renderRedButtom() }
+                    
+                    
+                    <IconButton
+                        className={clsx(classes.expand, {
+                            [classes.expandOpen]: expanded,
+                        })}
+                        onClick={toggleExpand}
+                        aria-expanded={expanded}
+                        aria-label="Show more">
+                        <ExpandMoreIcon />
+                    </IconButton>
+                </CardActions>
+
+                
+                
+                <Collapse in={expanded} timeout="auto" unmountOnExit>
+                    <ButtonGroup color="primary" size="medium" 
+                        style={{float: 'left', marginLeft: 20, marginBottom: 20}}
+                        aria-label="large outlined secondary button group"
+                    >
+                        <Button style={getTabButtonStyle('instructions')}
+                            onClick={() => setTab('instructions')}>
+                            Instructions
+                        </Button>
+                        <Button style={getTabButtonStyle('ingredients')}
+                            onClick={() => setTab('ingredients')}>
+                            Ingredients
+                        </Button>
+                    </ButtonGroup>
+                    
+                    { tab === 'instructions' ? 
+                        <CardContent>
+                            <List data={recipe.instructions.split('.').filter(inst => inst !== "")}/>
+                        </CardContent>
+                    :
+                        <CardContent>
+                            <List data={ingredients}/>
+                        </CardContent>
+                    }
+                </Collapse>
+            </Card>
+        </Box>
   );
 }

@@ -44,14 +44,11 @@ class RecipesRecommendator extends Component{
     }
 
     updateUser = (user) => {
-        this.props.updateUser(user).then(res => {
-            localStorage.setItem('user', JSON.stringify(user))
-            toastr.success("Successfully updated!")
-            this.forceUpdate()
-        }).catch( error => {
-            console.log(error)
-            toastr.error(error)
-        })
+        return this.props.updateUser(user).then(res => {
+                    localStorage.setItem('user', JSON.stringify(user))
+                    toastr.success("Successfully updated!")
+                    this.forceUpdate()
+                })
     }
 
     render(){
