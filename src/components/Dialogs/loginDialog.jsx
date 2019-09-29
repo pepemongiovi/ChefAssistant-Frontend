@@ -32,7 +32,6 @@ class LoginDialog extends React.Component {
   }
 
   handleClose = () => {
-    console.log(this.props)
     this.props.handleClose()
     this.setState({ username: "", password: "", error_message: ""})
   }
@@ -77,7 +76,7 @@ class LoginDialog extends React.Component {
           
           <DialogActions style={{ margin: 15, marginTop: 5 }}>
             <Button onClick={this.login} fullWidth color="primary" variant="contained" 
-              disabled={this.state.loading || this.state.username == "" || this.state.password == "" }>
+              disabled={this.state.loading || this.state.username === "" || this.state.password === "" }>
               { this.state.loading ? <CircularProgress style={{ marginRight: 5 }} size={20}/> : null }
               Log in
             </Button>

@@ -14,7 +14,6 @@ export const login = (username, password) => dispatch => {
                 user.authdata = window.btoa(username + ':' + password);
                 localStorage.setItem('user', JSON.stringify(user));
                 localStorage.setItem('authToken', user.token);
-                console.log(user)
             }
             dispatch({type: LOGIN, payload: user})
         });

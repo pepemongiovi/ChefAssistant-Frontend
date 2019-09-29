@@ -28,7 +28,17 @@ class IngredientsSelector extends Component {
       this.state = {
         ingredients: [],
         mainIngredient: null,
-        loading: false
+        loading: false,
+        dairyFree: false,
+        glutenFree: false,
+        ketogenic: false,
+        lowFodmap: false,
+        sustainable:false,
+        vegan: false, 
+        vegetarian: false,
+        veryHealthy: false,
+        whole30: false,
+        veryPopular: false
       }
   }
 

@@ -19,8 +19,10 @@ class RecipesRecommendator extends Component{
     }
 
     getRecommendedRecipes = (ingredients, mainIngredient, selectedFilters, setLoading) => {
-        this.props.getSimilarIngredients(mainIngredient, ingredients, selectedFilters).then(res => {
-            console.log(res)
+        let user = JSON.parse(localStorage.getItem('user'))
+        let ignoredRecipes = user ? user.ignoredRecipes : []
+
+        this.props.getSimilarIngredients(mainIngredient, ingredients, selectedFilters, ignoredRecipes).then(res => {
             const { ingredientsIds, mainIngredientIds } = res.payload.result
 
             this.props.getRecommendedRecipes(mainIngredientIds, ingredientsIds).then(res => 
@@ -74,7 +76,7 @@ class RecipesRecommendator extends Component{
 const dispatchToProps = (dispatch) => ({
     getIngredient: (id) => dispatch(getIngredient(id)),
     getRecipe: (recipeId) => dispatch(getRecipe(recipeId)),
-    getSimilarIngredients: (mainIngredient, ingredients, selectedFilters) => dispatch(getSimilarIngredients(mainIngredient, ingredients, selectedFilters)),
+    getSimilarIngredients: (mainIngredient, ingredients, selectedFilters, ignoredRecipes) => dispatch(getSimilarIngredients(mainIngredient, ingredients, selectedFilters, ignoredRecipes)),
     getRecommendedRecipes: (ingredients, mainIngredient) => dispatch(getRecommendedRecipes(ingredients, mainIngredient)),
     updateUser: (user) => dispatch(updateUser(user))
 })
