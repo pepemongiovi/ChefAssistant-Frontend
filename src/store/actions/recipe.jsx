@@ -1,8 +1,9 @@
 import { GET_RECIPES, GET_RECIPE, CREATE_RECIPE, UPDATE_RECIPE, GET_RECOMMENDED_RECIPES } from './constants';
 
+const baseUrl = "http://35.235.5.103:8080"
 
 export const getRecipes = () => dispatch => {
-  return fetch('/recipes', {
+  return fetch(`${baseUrl}/recipes`, {
     method: "GET",
     headers: { 
       "Content-Type": "application/json",
@@ -14,7 +15,7 @@ export const getRecipes = () => dispatch => {
 }
 
 export const getRecipe = (recipeId) => dispatch => {
-  return fetch(`/recipes/${recipeId}`, {
+  return fetch(`${baseUrl}/recipes/${recipeId}`, {
     method: "GET",
     headers: { 
       "Content-Type": "application/json",
@@ -26,7 +27,7 @@ export const getRecipe = (recipeId) => dispatch => {
 }
 
 export const getRecommendedRecipes = (mainIngredientIds, ingredientsIds) => dispatch =>{
-  return fetch('/recipes/recommendedRecipes', {
+  return fetch(`${baseUrl}/recipes/recommendedRecipes`, {
       method: "POST", 
       headers: { 
         "Content-Type": "application/json",
@@ -42,7 +43,7 @@ export const getRecommendedRecipes = (mainIngredientIds, ingredientsIds) => disp
 }
 
 export const createRecipe = (data) => dispatch => {
-  return fetch('/recipes', { 
+  return fetch(`${baseUrl}/recipes`, { 
       method: "POST", 
       headers: { 
         "Content-Type": "application/json",
@@ -55,7 +56,7 @@ export const createRecipe = (data) => dispatch => {
 }
 
 export const updateRecipe = (data) => dispatch => {
-  return fetch(`/recipes/${data._id}`, { method: 'PATCH', data: data })
+  return fetch(`${baseUrl}/recipes/${data._id}`, { method: 'PATCH', data: data })
     .then(res => res.json())
     .then(recipe => dispatch({type: UPDATE_RECIPE, payload: recipe}))
 }

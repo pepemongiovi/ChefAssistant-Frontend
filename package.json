@@ -1,6 +1,6 @@
 {
   "name": "chefassistant",
-  "homepage": "http://localhost:5000",
+  "homepage": "https://chefassistant.appspot.com/",
   "description": "A tool to show the many possibilities of recipes you can make with the ingredients you have.",
   "version": "0.1.0",
   "private": true,
@@ -45,7 +45,6 @@
     "maintained node versions",
     "not dead"
   ],
-  "proxy": "http://35.235.5.103:8080",
   "author": "Giuseppe Guerra Mongiovi",
   "devDependencies": {
     "json-loader": "^0.5.7"

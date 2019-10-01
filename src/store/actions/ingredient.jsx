@@ -1,8 +1,9 @@
 import { GET_INGREDIENT, CREATE_INGREDIENT, GET_SIMILAR_INGREDIENTS, UPDATE_INGREDIENT} from './constants';
 
+const baseUrl = "http://35.235.5.103:8080"
 
 export const getIngredient = (id) => dispatch => {
-  return fetch(`/ingredients/${id}`, {
+  return fetch(`${baseUrl}/ingredients/${id}`, {
     method: "GET", 
     headers: { 
       "Content-Type": "application/json",
@@ -13,7 +14,7 @@ export const getIngredient = (id) => dispatch => {
 }
 
 export const getSimilarIngredients = (mainIngredient, ingredients, selectedFilters, ignoredRecipes) => dispatch => {
-  return fetch(`/ingredients/similarIngredients`, {
+  return fetch(`${baseUrl}/ingredients/similarIngredients`, {
       method: "POST", 
       headers: { 
         "Content-Type": "application/json",
@@ -30,13 +31,13 @@ export const getSimilarIngredients = (mainIngredient, ingredients, selectedFilte
 }
 
 export const createIngredient = (data) => dispatch => {
-  return fetch('/ingredients', { method: 'GET', data: data })
+  return fetch(`${baseUrl}/ingredients`, { method: 'GET', data: data })
     .then(res => res.json())
     .then(ingredient => dispatch({type: CREATE_INGREDIENT, payload: ingredient}))
 }
 
 export const updateIngredient = (data) => dispatch => {
-  return fetch(`/ingredients/${data._id}` , { method: 'PATCH', data: data })
+  return fetch(`${baseUrl}/ingredients/${data._id}` , { method: 'PATCH', data: data })
     .then(res => res.json())
     .then(ingredient => dispatch({type: UPDATE_INGREDIENT, payload: ingredient}))
 }

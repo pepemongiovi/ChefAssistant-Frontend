@@ -43,11 +43,11 @@ class LoginDialog extends React.Component {
 
   render() {
     return (
-      <div>
-        <Dialog open={this.props.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
-          <DialogTitle style={{ marginBottom: -10 }}>
-            <b>Login</b>
-          </DialogTitle>
+      <Dialog open={this.props.open} onClose={this.handleClose} aria-labelledby="form-dialog-title">
+        <DialogTitle style={{ marginBottom: -10 }}>
+          <b>Login</b>
+        </DialogTitle>
+        <form > 
           <DialogContent>
             <TextField
               value={this.state.username}
@@ -75,15 +75,16 @@ class LoginDialog extends React.Component {
           </DialogContent>
           
           <DialogActions style={{ margin: 15, marginTop: 5 }}>
-            <Button onClick={this.login} fullWidth color="primary" variant="contained" 
+            <Button onClick={this.login} fullWidth color="primary" type="submit" variant="contained" 
               disabled={this.state.loading || this.state.username === "" || this.state.password === "" }>
               { this.state.loading ? <CircularProgress style={{ marginRight: 5 }} size={20}/> : null }
               Log in
             </Button>
           </DialogActions>
-          <p style={{ color: 'red', textAlign: 'center', marginTop: -10 }}>{this.state.error_message}</p>
-        </Dialog>
-      </div>
+        </form>
+        <p style={{ color: 'red', textAlign: 'center', marginTop: -10 }}>{this.state.error_message}</p>
+      </Dialog>
+
     );
   }
 }

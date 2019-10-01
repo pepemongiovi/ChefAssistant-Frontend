@@ -1,5 +1,7 @@
 import { LOGIN, REGISTER, UPDATE_USER } from './constants';
 
+const baseUrl = "http://35.235.5.103:8080"
+
 export const login = (username, password) => dispatch => {
     const requestOptions = {
         method: 'POST',
@@ -7,7 +9,7 @@ export const login = (username, password) => dispatch => {
         body: JSON.stringify({ username, password })
     };
 
-    return fetch(`/users/authenticate`, requestOptions)
+    return fetch(`${baseUrl}/users/authenticate`, requestOptions)
         .then(handleResponse)
         .then(user => {
             if (user) {
@@ -26,7 +28,7 @@ export const register = (username, password) => dispatch => {
         body: JSON.stringify({ username, password })
     };
 
-    return fetch(`/users/register`, requestOptions)
+    return fetch(`${baseUrl}/users/register`, requestOptions)
         .then(handleResponse)
         .then(user => dispatch({type: REGISTER, payload: user}));
 }
@@ -41,7 +43,7 @@ export const updateUser = (updatedUser) => dispatch => {
         body: JSON.stringify(updatedUser)
     };
 
-    return fetch(`/users/${updatedUser._id}`, requestOptions)
+    return fetch(`${baseUrl}/users/${updatedUser._id}`, requestOptions)
         .then(handleResponse)
         .then(user => dispatch({type: UPDATE_USER, payload: user}));
 }
