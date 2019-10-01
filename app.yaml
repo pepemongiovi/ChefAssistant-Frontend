@@ -1,0 +1,17 @@
+runtime: python27
+api_version: 1
+threadsafe: true
+
+handlers:
+- url: /(.*\.(js|css|ico|mainfest|svg|gif|png|jpg))$
+  static_files: build/\1
+  upload: build/.*\.(js|css|ico|mainfest|svg|gif|png|jpg)$
+
+- url: /.*
+  static_files: build/index.html
+  upload: build/index.html
+
+
+
+
+

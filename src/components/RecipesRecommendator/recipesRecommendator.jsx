@@ -23,6 +23,7 @@ class RecipesRecommendator extends Component{
         let ignoredRecipes = user ? user.ignoredRecipes : []
 
         this.props.getSimilarIngredients(mainIngredient, ingredients, selectedFilters, ignoredRecipes).then(res => {
+            console.log(res)
             const { ingredientsIds, mainIngredientIds } = res.payload.result
 
             this.props.getRecommendedRecipes(mainIngredientIds, ingredientsIds).then(res => 

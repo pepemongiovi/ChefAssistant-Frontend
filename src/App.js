@@ -7,6 +7,8 @@ import MenuToolbar from './components/common/toolbar'
 import ReduxToastr from 'react-redux-toastr'
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
 import './App.css'
+import "core-js";
+import "regenerator-runtime/runtime";
 
 class App extends Component {
 
