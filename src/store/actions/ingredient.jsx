@@ -1,6 +1,6 @@
 import { GET_INGREDIENT, CREATE_INGREDIENT, GET_SIMILAR_INGREDIENTS, UPDATE_INGREDIENT} from './constants';
 
-const baseUrl = "http://35.235.5.103:8080"
+const baseUrl = "https://34.68.19.24:8080"
 
 export const getIngredient = (id) => dispatch => {
   return fetch(`${baseUrl}/ingredients/${id}`, {

@@ -128,17 +128,19 @@ class IngredientsSelector extends Component {
 
         { this.renderFilters() }
 
-        <Tooltip title="Main ingredient required!"><div>
-          <Button fullWidth variant="contained" onClick={() => this.search()}
-                style={{ marginTop: 15 }} color="primary" placeholder="wow"
-                disabled={!this.state.mainIngredient || this.state.loading}>
-            { this.state.loading ? 
-              <CircularProgress style={{ marginRight: 5 }} size={20}/>
-              : <SearchIcon style={{ marginRight: 5 }}/>
-            }
-            Search for recipes
-          </Button>
-        </div></Tooltip>
+        <Tooltip title={this.state.loading ? "" : "Main ingredient required!"}>
+          <div>
+            <Button fullWidth variant="contained" onClick={() => this.search()}
+                  style={{ marginTop: 15 }} color="primary" placeholder="wow"
+                  disabled={!this.state.mainIngredient || this.state.loading}>
+              { this.state.loading ? 
+                <CircularProgress style={{ marginRight: 5 }} size={20}/>
+                : <SearchIcon style={{ marginRight: 5 }}/>
+              }
+              Search for recipes
+            </Button>
+          </div>
+        </Tooltip>
       </div>
     );
   }
