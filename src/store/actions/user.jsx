@@ -1,6 +1,6 @@
 import { LOGIN, REGISTER, UPDATE_USER } from './constants';
 
-const baseUrl = "https://34.68.19.24:8080"
+const baseUrl = "https://chefassistant.best:8080"
 
 export const login = (username, password) => dispatch => {
     const requestOptions = {
@@ -20,6 +20,7 @@ export const login = (username, password) => dispatch => {
             dispatch({type: LOGIN, payload: user})
         });
 }
+
 
 export const register = (username, password) => dispatch => {
     const requestOptions = {

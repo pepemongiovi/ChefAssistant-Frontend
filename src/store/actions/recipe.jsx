@@ -1,6 +1,6 @@
 import { GET_RECIPES, GET_RECIPE, CREATE_RECIPE, UPDATE_RECIPE, GET_RECOMMENDED_RECIPES } from './constants';
 
-const baseUrl = "https://34.68.19.24:8080"
+const baseUrl = "https://chefassistant.best:8080"
 
 export const getRecipes = () => dispatch => {
   return fetch(`${baseUrl}/recipes`, {
