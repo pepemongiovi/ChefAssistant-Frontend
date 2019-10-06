@@ -186,36 +186,43 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
 
                 <Divider/>
                 
-                { JSON.parse(localStorage.getItem('user')) ?
-                    <CardActions>
-                        { favoritedByUser() || ignoreddByUser() ? null : 
-                            <IconButton onClick={() => addRecipeToFavorites()} 
-                                aria-label="Like" style={{color: 'green'}} disabled={greenButtonLoading}>
-                                { greenButtonLoading ? <CircularProgress size={15}/>
-                                : <FavoriteIcon /> 
-                                }
-                                <span style={{ color: 'green', fontSize:13 }}>
-                                    Add to Favorites
-                                </span>
-                            </IconButton>
-                        }
-                        
-                        { renderRedButtom() }
-                        
-                        
-                        <IconButton
-                            className={clsx(classes.expand, {
-                                [classes.expandOpen]: expanded,
-                            })}
-                            onClick={toggleExpand}
-                            aria-expanded={expanded}
-                            aria-label="Show more">
-                            <ExpandMoreIcon />
-                        </IconButton>
-                    </CardActions>
-                :  
-                    <span style={{color: "green"}}>Login to save this to your favorites</span>           
-                }
+             
+                <CardActions>
+                    { JSON.parse(localStorage.getItem('user')) ? 
+                        <div>
+                            { favoritedByUser() || ignoreddByUser() ? null : 
+                                <IconButton onClick={() => addRecipeToFavorites()} 
+                                    aria-label="Like" style={{color: 'green'}} disabled={greenButtonLoading}>
+                                    { greenButtonLoading ? <CircularProgress size={15}/>
+                                    : <FavoriteIcon /> 
+                                    }
+                                    <span style={{ color: 'green', fontSize:13 }}>
+                                        Add to Favorites
+                                    </span>
+                                </IconButton>
+                            }
+
+                            {renderRedButtom()}
+                        </div>
+
+                        : <span style={{color: "green"}}>Login to save this to your favorites</span>
+                            
+                    }
+
+                    
+                    
+                    
+                    <IconButton
+                        className={clsx(classes.expand, {
+                            [classes.expandOpen]: expanded,
+                        })}
+                        onClick={toggleExpand}
+                        aria-expanded={expanded}
+                        aria-label="Show more">
+                        <ExpandMoreIcon />
+                    </IconButton>
+                </CardActions>
+    
                 
 
                 
