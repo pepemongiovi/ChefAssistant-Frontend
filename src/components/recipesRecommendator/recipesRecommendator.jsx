@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { getRecommendedRecipes, getRecipe } from '../../store/actions/recipe'
 import { getSimilarIngredients, getIngredient } from '../../store/actions/ingredient'
 import { updateUser } from '../../store/actions/user'
-import IngredientsSelector from './IngredientsSelector/ingredientsSelector'
-import RecipeList from '../RecipesList/recipesList'
+import IngredientsSelector from '../ingredientsSelector/ingredientsSelector'
+import RecipeList from '../recipesList/recipesList'
 import { Paper } from '@material-ui/core'
 import { toastr } from 'react-redux-toastr'
 
@@ -14,6 +14,7 @@ class RecipesRecommendator extends Component{
         super()
         this.state = {
             recipes: [],
+            fetched: false,
             loading: false
         }
     }
@@ -23,17 +24,15 @@ class RecipesRecommendator extends Component{
         let ignoredRecipes = user ? user.ignoredRecipes : []
 
         this.props.getSimilarIngredients(mainIngredient, ingredients, selectedFilters, ignoredRecipes).then(res => {
-            console.log(res)
-            const { ingredientsIds, mainIngredientIds } = res.payload.result
+            const { ingredientsIds, mainIngredientIds } = res.payload
 
-            this.props.getRecommendedRecipes(mainIngredientIds, ingredientsIds).then(res => 
-                this.fetchRecipes(res, setLoading)
-            )
+            this.props.getRecommendedRecipes(mainIngredientIds, ingredientsIds).then(res =>  {
+                this.fetchRecipes(res.payload, setLoading)
+            }).catch(err => console.log(err))
         })
     }
 
     fetchRecipes = (recipes, setLoading) => {
-        recipes = recipes.payload.recipes
         let promises = []
 
         recipes.forEach(recipe => {
@@ -41,7 +40,10 @@ class RecipesRecommendator extends Component{
         })
  
         Promise.all(promises).then(res => {
-            this.setState({ recipes: res.map(r => r.payload[0])})
+            this.setState({ 
+                recipes: res.map(r => r.payload),
+                fetched: true
+            })
             setLoading()
         })
     }
@@ -63,7 +65,7 @@ class RecipesRecommendator extends Component{
                 </Paper>
                 
                 <br></br>
-                { this.state.recipes.length > 0 ? (
+                { this.state.fetched ? (
                     <Paper style={{ padding: 20, backgroundColor: 'rgb(255,255,255,0.7)' }}>
                         <p style={{fontSize: 30, marginTop: 2}}>Recommended Recipes</p><br></br>
                         <RecipeList recipes={this.state.recipes} getIngredient={this.props.getIngredient} updateUser={this.updateUser}/>

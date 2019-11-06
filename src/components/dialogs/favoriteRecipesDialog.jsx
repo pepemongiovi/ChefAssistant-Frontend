@@ -5,9 +5,9 @@ import { getRecipe } from '../../store/actions/recipe'
 import { updateUser } from '../../store/actions/user'
 import { connect } from 'react-redux'
 import { toastr } from 'react-redux-toastr'
-import RecipesList from '../RecipesList/recipesList'
+import RecipesList from '../recipesList/recipesList'
 
-class IgnoredRecipesDialog extends React.Component {
+class FavoriteRecipesDialog extends React.Component {
   constructor(props){
     super(props)
     this.state = {
@@ -25,11 +25,11 @@ class IgnoredRecipesDialog extends React.Component {
   fetchRecipes = () => {
     let promises = []
 
-    JSON.parse(localStorage.getItem('user')).ignoredRecipes.forEach( recipeId => 
+    JSON.parse(localStorage.getItem('user')).favoriteRecipes.forEach( recipeId => 
       promises.push(this.props.getRecipe(recipeId))
     )
     Promise.all(promises).then(res => {
-      this.setState({ recipes: res.map(r => r.payload[0]), loading: false})
+      this.setState({ recipes: res.map(r => r.payload), loading: false})
     })
   }
 
@@ -38,7 +38,7 @@ class IgnoredRecipesDialog extends React.Component {
               localStorage.setItem('user', JSON.stringify(user))
               toastr.success("Successfully updated!")
               this.fetchRecipes()
-          })
+           })
   }
 
   renderContent = () => {
@@ -47,7 +47,7 @@ class IgnoredRecipesDialog extends React.Component {
     }
     else if(this.state.recipes.length === 0) {
       return <p style={{ color: 'red', textAlign: 'center'}}>
-                No ignored recipes added.
+                No favorite recipes added.
              </p> 
     }
     else {
@@ -71,7 +71,7 @@ class IgnoredRecipesDialog extends React.Component {
         >
           <Paper style={{ padding: 20, backgroundColor: 'rgb(255,255,255,0.6)' }}>
             <DialogTitle style={{ marginTop: -10, textAlign: 'center' }}>
-              <b style={{ fontSize: 40 }}>My ignored recipes</b>
+            <p style={{fontSize: 30, marginTop: 2}}>Favorite recipes</p>
             </DialogTitle>
             <DialogContent>
               { this.renderContent() }
@@ -90,5 +90,5 @@ const dispatchToProps = (dispatch) => ({
   updateUser: (user) => dispatch(updateUser(user))
 })
 
-export default connect(null, dispatchToProps)(IgnoredRecipesDialog)
+export default connect(null, dispatchToProps)(FavoriteRecipesDialog)
 

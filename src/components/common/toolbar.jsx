@@ -7,10 +7,10 @@ import LogoutIcon from '@material-ui/icons/ExitToApp';
 import IgnoreIcon from '@material-ui/icons/VisibilityOff';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import { AppBar, Menu, MenuItem, IconButton, Typography, Toolbar, Button} from '@material-ui/core';
-import LoginDialog from '../Dialogs/loginDialog'
-import RegistrationDialog from '../Dialogs/registrationDialog'
-import FavoriteRecipesDialog from '../Dialogs/favoriteRecipesDialog'
-import IgnoredRecipesDialog from '../Dialogs/ignoredRecipesDialog'
+import LoginDialog from '../dialogs/loginDialog'
+import RegistrationDialog from '../dialogs/registrationDialog'
+import FavoriteRecipesDialog from '../dialogs/favoriteRecipesDialog'
+import IgnoredRecipesDialog from '../dialogs/ignoredRecipesDialog'
 
 import { toastr } from 'react-redux-toastr'
 

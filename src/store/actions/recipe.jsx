@@ -11,7 +11,10 @@ export const getRecipes = () => dispatch => {
     }
   })
     .then(res => res.json())
-    .then(recipes => dispatch({type: GET_RECIPES, payload: recipes}))
+    .then(recipes => dispatch({
+      type: GET_RECIPES, 
+      payload: recipes
+    }))
 }
 
 export const getRecipe = (recipeId) => dispatch => {
@@ -23,7 +26,10 @@ export const getRecipe = (recipeId) => dispatch => {
     }
   })
     .then(res => res.json())
-    .then(recipe => dispatch({type: GET_RECIPE, payload: recipe}))
+    .then(recipe => dispatch({
+      type: GET_RECIPE,
+      payload: recipe[0]
+    }))
 }
 
 export const getRecommendedRecipes = (mainIngredientIds, ingredientsIds) => dispatch =>{
@@ -38,7 +44,10 @@ export const getRecommendedRecipes = (mainIngredientIds, ingredientsIds) => disp
         ingredientsIds: ingredientsIds
       })
     }).then(res => res.json())
-    .then(recipes => dispatch({type: GET_RECOMMENDED_RECIPES, payload: recipes}))
+    .then(recipes => dispatch({
+      type: GET_RECOMMENDED_RECIPES,
+      payload: recipes.recipes
+    }))
     .catch(err => console.log(err))
 }
 
@@ -52,11 +61,17 @@ export const createRecipe = (data) => dispatch => {
       body: JSON.stringify(data) 
     })
     .then(res => res.json())
-    .then(recipe => dispatch({type: CREATE_RECIPE, payload: recipe}))
+    .then(recipe => dispatch({
+      type: CREATE_RECIPE,
+      payload: recipe
+    }))
 }
 
 export const updateRecipe = (data) => dispatch => {
   return fetch(`${baseUrl}/recipes/${data._id}`, { method: 'PATCH', data: data })
     .then(res => res.json())
-    .then(recipe => dispatch({type: UPDATE_RECIPE, payload: recipe}))
+    .then(recipe => dispatch({
+      type: UPDATE_RECIPE,
+      payload: recipe
+    }))
 }

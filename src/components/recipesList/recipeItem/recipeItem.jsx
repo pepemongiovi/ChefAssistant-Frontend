@@ -34,7 +34,7 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
     const classes = useStyles();
     const [expanded, setExpanded] = useState(false);
     const [tab, setTab] = useState('instructions')
-    const [ingredients] = useState([])
+    const [ingredients, setIngredients] = useState([])
     const [greenButtonLoading, setGreenButtonLoading] = useState(false)
     const [redButtonLoading, setRedButtonLoading] = useState(false)
 
@@ -66,14 +66,17 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
     }
 
     const toggleExpand = () => {
-        setExpanded(!expanded)
-
         if(ingredients.length === 0) {
+            const requests = []
             recipe.ingredients.forEach(id => {
-                getIngredient(id).then(res => {
-                    ingredients.push(res.payload[0].label)
-                })
+                requests.push(getIngredient(id))
             })
+            Promise.all(requests).then(res => {
+                setIngredients(res.map(obj => obj.payload.label))
+                setExpanded(!expanded)
+            })
+        }else {
+            setExpanded(!expanded)
         }
     }
 
@@ -169,7 +172,7 @@ export default function RecipeItem({ recipe, getIngredient, updateUser }) {
     }
 
     return (
-        <Box border={1} style={{width: '70%'}}>
+        <Box border={0} style={{width: '70%'}}>
             <Card className={classes.card}>
                 <CardHeader
                     title={recipe.title}

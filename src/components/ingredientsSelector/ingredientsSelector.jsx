@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import SearchIcon from '@material-ui/icons/Search'
 import './ingredientsSelector.css';
 import { Button, Tooltip, Checkbox, FormControlLabel, CircularProgress }from '@material-ui/core'
-import suggestions from '../../../../src/ingredientsSuggestions'
+import suggestions from '../../../src/ingredientsSuggestions'
 import AsyncCreatableSelect from 'react-select/async-creatable';
 
 const filterIngredients = (inputValue) => {
@@ -114,7 +114,7 @@ class IngredientsSelector extends Component {
           defaultOptions
           onChange={this.handleMainIngredientChange}
           loadOptions={loadSuggestions}
-          placeholder="Choose a main ingredient (REQUIRED)"
+          placeholder="Choose a main ingredient (Optional)"
         /><br></br>
 
         <AsyncCreatableSelect
@@ -132,7 +132,7 @@ class IngredientsSelector extends Component {
           <div>
             <Button fullWidth variant="contained" onClick={() => this.search()}
                   style={{ marginTop: 15 }} color="primary" placeholder="wow"
-                  disabled={!this.state.mainIngredient || this.state.loading}>
+                  disabled={(!this.state.mainIngredient && !this.state.ingredients.length) || this.state.loading}>
               { this.state.loading ? 
                 <CircularProgress style={{ marginRight: 5 }} size={20}/>
                 : <SearchIcon style={{ marginRight: 5 }}/>

@@ -63,7 +63,11 @@ class RegistrationDialog extends React.Component {
                   type="username"
                   fullWidth
                 />
-                { username == null || username.length > 5 ? null : 
+                { this.state.error_message ?
+                  <FormHelperText style={{ color: "red" }}>
+                    {this.state.error_message}
+                  </FormHelperText>
+                  : username == null || username.length > 5 ? null : 
                   <FormHelperText style={{ color: "red" }}>
                     Must have at least 6 characters
                   </FormHelperText>
