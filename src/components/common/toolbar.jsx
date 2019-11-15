@@ -57,6 +57,7 @@ export default function MenuToolbar() {
     handleClose()
     setUser(null)
     localStorage.removeItem('user');
+    localStorage.setItem('authToken', null);
     toastr.success("Successfully logged out!")
   }
 
